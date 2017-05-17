@@ -62,8 +62,12 @@ void Game::UpdateModel()
 {
 	//update the location of the user depends on which keys he pressed
 	cube->Update(wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_LEFT));
-	cube->UpdateMouse(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
-	
+	//mouse control
+	if (wnd.mouse.LeftIsPressed())
+	{
+		cube->UpdateMouse(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+	}
+
 	if (UpdateImpact(cube, pcube))
 	{
 		if (score < 600)

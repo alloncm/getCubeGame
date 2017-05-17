@@ -62,6 +62,7 @@ void uCube::UpdateMouse(int posx, int posy)
 	Vec2 vl (posx - pos.x, posy - pos.y);
 	vl = vl.Normalise();
 	vel = vl;
+	vel = vel * 2;
 	pos += vel;
 }
 
