@@ -1,15 +1,13 @@
 #pragma once
 #include"Graphics.h"
-
+#include"Vec2.h"
 
 class uCube
 {
 private:
-	int x;
-	int y;
+	Vec2 pos;
 	Color color;
-	int vx;
-	int vy;
+	Vec2 vel;
 	int size;
 	bool automove_x;
 	bool automove_y;
@@ -17,6 +15,7 @@ public:
 	uCube(int x, int y, Color c ,int size);
 	void InBounds();
 	void Update(bool up, bool down, bool right, bool left);
+	void UpdateMouse(int posx, int posy);
 	bool Impact(uCube* c);
 	void AutomaticMovement();
 	void Draw(Graphics& gfx);

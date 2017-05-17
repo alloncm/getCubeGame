@@ -4,11 +4,11 @@
 uCube::uCube(int x1, int y1, Color c, int s)
 //initialize the cube
 {
-	x = x1;
-	y = y1;
+	pos.x = x1;
+	pos.y = y1;
 	color = c;
 	size = s;
-	vx = vy = 1;
+	vel.x = vel.y = 1;
 	automove_x = false;
 	automove_y = false;
 }
@@ -18,21 +18,21 @@ uCube::uCube(int x1, int y1, Color c, int s)
 void uCube::InBounds()
 //checks if the cube is in bounds of the screen
 {
-	if (x < size)
+	if (pos.x < size)
 	{
-		x = size;
+		pos.x = size;
 	}
-	if (x > Graphics::ScreenWidth - size)
+	if (pos.x > Graphics::ScreenWidth - size)
 	{
-		x = Graphics::ScreenWidth - size;
+		pos.x = Graphics::ScreenWidth - size;
 	}
-	if (y < size)
+	if (pos.y < size)
 	{
-		y = size;
+		pos.y = size;
 	}
-	if (y >  Graphics::ScreenHeight - size)
+	if (pos.y >  Graphics::ScreenHeight - size)
 	{
-		y = Graphics::ScreenHeight - size;
+		pos.y = Graphics::ScreenHeight - size;
 	}
 }
 
@@ -41,27 +41,35 @@ void uCube::Update(bool up, bool down, bool right, bool left)
 {
 	if (up)
 	{
-		y -= vy;
+		pos.y -= vel.y;
 	}
 	if (down)
 	{
-		y += vy;
+		pos.y += vel.y;
 	}
 	if (right)
 	{
-		x += vx;
+		pos.x += vel.x;
 	}
 	if (left)
 	{
-		x -= vx;
+		pos.x -= vel.x;
 	}
+}
+
+void uCube::UpdateMouse(int posx, int posy)
+{
+	Vec2 vl (posx - pos.x, posy - pos.y);
+	vl = vl.Normalise();
+	vel = vl;
+	pos += vel;
 }
 
 bool uCube::Impact(uCube * c)
 //checks for impact with another cube
 {
 	int a = size + c->size;
-	if (x<(c->x + a) && x>(c->x - a) && y<(c->y + a) && y>(c->y - a))
+	if (pos.x<(c->pos.x + a) && pos.x>(c->pos.x - a) && pos.y<(c->pos.y + a) && pos.y>(c->pos.y - a))
 	{
 		return true;
 	}
@@ -73,61 +81,61 @@ void uCube::AutomaticMovement()
 //moves the cube automicaly 
 {
 	
-	if (x <= size)
+	if (pos.x <= size)
 	{
 		automove_x = true;
-		x = size;
+		pos.x = size;
 	}
-	else if (x >= Graphics::ScreenWidth - size)
+	else if (pos.x >= Graphics::ScreenWidth - size)
 	{
 		automove_x = false;
-		x = Graphics::ScreenWidth - size;
+		pos.x = Graphics::ScreenWidth - size;
 	}
 	if (automove_x)
 	{
-		x += vx;
+		pos.x += vel.x;
 	}
 	else
 	{
-		x -= vx;
+		pos.x -= vel.x;
 	}
 	
-	if (y <= size)
+	if (pos.y <= size)
 	{
 		automove_y = true;
-		y = size;
+		pos.y = size;
 	}
-	else if (y >= Graphics::ScreenHeight - size)
+	else if (pos.y >= Graphics::ScreenHeight - size)
 	{
 		automove_y = false;
-		y = Graphics::ScreenHeight - size;
+		pos.y = Graphics::ScreenHeight - size;
 	}
 	if (automove_y)
 	{
-		y += vy;
+		pos.y += vel.y;
 	}
 	else
 	{
-		y -= vy;
+		pos.y -= vel.y;
 	}
 }
 
 void uCube::Draw(Graphics & gfx)
 {
 	//draw the cube when the middle is the indecator
-	gfx.DrawRect(x - size, y - size, x + size, y + size, color);
+	gfx.DrawRect(pos.x - size, pos.y - size, pos.x + size, pos.y + size, color);
 }
 
 
 //gettes and setters
 void uCube::SetX(int x0)
 {
-	x = x0;
+	pos.x = x0;
 }
 
 void uCube::SetY(int y0)
 {
-	y = y0;
+	pos.y = y0;
 }
 
 int uCube::GetSize()
@@ -142,12 +150,12 @@ void uCube::IncSize()
 
 void uCube::SetVx(int v)
 {
-	vx = v;
+	vel.x = v;
 }
 
 void uCube::SetVy(int v)
 {
-	vy = v;
+	vel.y = v;
 }
 
 void uCube::SetColor(Color c)
